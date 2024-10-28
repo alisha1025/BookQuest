@@ -37,7 +37,7 @@ To get a local copy up and running, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/book-search-engine.git
+   git clone https://github.com/alisha1025/BookQuest.git
    cd book-search-engine
    ```
 
