@@ -1,48 +1,45 @@
-// use this to decode a token and get the user's information out of it
 import decode from 'jwt-decode';
 
-// create a new class to instantiate for a user
+// Class to manage user authentication
 class AuthService {
-  // get user data
+  // Retrieves user data from the token
   getProfile() {
-    return decode(this.getToken());
-  }
-
-  // check if user's logged in
-  loggedIn() {
-    // Checks if there is a saved token and it's still valid
     const token = this.getToken();
-    return !!token && !this.isTokenExpired(token); // handwaiving here
+    return token ? decode(token) : null; // Handle case when there's no token
   }
 
-  // check if token is expired
+  // Checks if the user is logged in
+  loggedIn() {
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired(token); // Returns true if token exists and is valid
+  }
+
+  // Checks if the token is expired
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
-      if (decoded.exp < Date.now() / 1000) {
-        return true;
-      } else return false;
+      return decoded.exp < Date.now() / 1000; // Returns true if expired
     } catch (err) {
-      return false;
+      console.error('Token decoding failed:', err);
+      return true; // Assume expired if there's an error
     }
   }
 
+  // Retrieves the user token from localStorage
   getToken() {
-    // Retrieves the user token from localStorage
     return localStorage.getItem('id_token');
   }
 
+  // Saves the user token to localStorage and redirects to home
   login(idToken) {
-    // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
     window.location.assign('/');
   }
 
+  // Clears user token and profile data from localStorage and reloads the page
   logout() {
-    // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
-    // this will reload the page and reset the state of the application
-    window.location.assign('/');
+    window.location.assign('/'); // Reload the page to reset application state
   }
 }
 
